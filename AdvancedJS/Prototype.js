@@ -45,7 +45,6 @@ Employee.prototype.calculateSalary = function(){
         paid : total - tax
     }
 
-
 }
 
 
@@ -61,21 +60,6 @@ var emp2_salary = emp2.calculateSalary();
 
 console.log(`${emp2.name} isimli personel ${emp2_salary.tax} vergi kesintisi ile ${emp2_salary.paid}
 maaş almıştır.`);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
