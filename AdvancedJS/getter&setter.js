@@ -26,6 +26,7 @@ Object.defineProperty(person,'fullname',{
 
 Object.defineProperty(person,'age',{
     value : 50,
+    writable : true  //Yazılabilen (set) true olarak ayarlarsak değer atamaları işlenir.
 })
 
 person.age = 55;
