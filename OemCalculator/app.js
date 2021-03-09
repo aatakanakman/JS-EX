@@ -1,45 +1,76 @@
-//Storage Controller
-
+// Storage Controller
 const StorageController = (function () {
 
+    return {
+        storeProduct: function(product){
+            let products;   
+            if(localStorage.getItem('products')===null){
+                products = [];
+                products.push(product);                
+            }else{
+                products = JSON.parse(localStorage.getItem('products'));
+                products.push(product);
+            }
+            localStorage.setItem('products',JSON.stringify(products));
+        },
+        getProducts: function(){
+            let products;
+            if(localStorage.getItem('products')==null){
+                products = [];
+            }else{
+                products = JSON.parse(localStorage.getItem('products'));
+            }
+            return products;
+        },
+        updateProduct: function(product){
+            let products = JSON.parse(localStorage.getItem('products'));
 
+            products.forEach(function(prd,index){
+                if(product.id == prd.id){
+                    products.splice(index,1,product);
+                }
+            });
+            localStorage.setItem('products',JSON.stringify(products));
+        },
+        deleteProduct: function(id){
+            let products = JSON.parse(localStorage.getItem('products'));
+
+            products.forEach(function(prd,index){
+                if(id == prd.id){
+                    products.splice(index,1);
+                }
+            });
+            localStorage.setItem('products',JSON.stringify(products));
+        }
+    }
 
 })();
 
-
-
-//Product Controller
-
+// Product Controller
 const ProductController = (function () {
 
-    //Private
-
+    // private
     const Product = function (id, name, price) {
-
-        this.id = id
-        this.name = name
-        this.price = price
-
+        this.id = id;
+        this.name = name;
+        this.price = price;
     }
 
     const data = {
-        products: [],
+        products: StorageController.getProducts(),
         selectedProduct: null,
         totalPrice: 0
     }
 
-    //Public
+    // public
     return {
-
         getProducts: function () {
             return data.products;
         },
         getData: function () {
             return data;
         },
-
-        GetProductById: function (id) {
-
+        getProductById: function (id) {
             let product = null;
 
             data.products.forEach(function (prd) {
@@ -47,24 +78,19 @@ const ProductController = (function () {
                     product = prd;
                 }
             })
-
             return product;
         },
-
         setCurrentProduct: function (product) {
             data.selectedProduct = product;
         },
-
         getCurrentProduct: function () {
             return data.selectedProduct;
         },
-
-        AddProduct: function (name, price) {
-
+        addProduct: function (name, price) {
             let id;
 
             if (data.products.length > 0) {
-                id = data.products[data.products.length - 1].id + 1
+                id = data.products[data.products.length - 1].id + 1;
             } else {
                 id = 0;
             }
@@ -72,10 +98,8 @@ const ProductController = (function () {
             const newProduct = new Product(id, name, parseFloat(price));
             data.products.push(newProduct);
             return newProduct;
-
         },
-
-        updateProduct : function (name, price) {
+        updateProduct: function (name, price) {
             let product = null;
 
             data.products.forEach(function (prd) {
@@ -84,34 +108,41 @@ const ProductController = (function () {
                     prd.price = parseFloat(price);
                     product = prd;
                 }
-            })
+            });
 
             return product;
         },
+        deleteProduct: function (product) {
 
-        GetTotal: function () {
+            data.products.forEach(function (prd, index) {
+                if (prd.id == product.id) {
+                    data.products.splice(index, 1);
+                }
+            })
+
+        },
+        getTotal: function () {
             let total = 0;
+
             data.products.forEach(function (item) {
                 total += item.price;
             });
 
             data.totalPrice = total;
             return data.totalPrice;
-        },
-
+        }
     }
 
 })();
 
 
-
-//UI Controller 
+// UI Controller
 
 const UIController = (function () {
 
-    const selectors = {
-        productList: '#item-list',
-        productListItems : '#item-list tr',
+    const Selectors = {
+        productList: "#item-list",
+        productListItems: "#item-list tr",
         addButton: '.addBtn',
         updateButton: '.updateBtn',
         cancelButton: '.cancelBtn',
@@ -121,162 +152,132 @@ const UIController = (function () {
         productCard: '#productCard',
         totalTL: '#total-tl',
         totalDolar: '#total-dolar'
-
     }
 
     return {
         createProductList: function (products) {
-            let html = ``;
+            let html = '';
 
             products.forEach(prd => {
                 html += `
-                <tr>
-                    <td>${prd.id}</td>
-                    <td>${prd.name}</td>
-                    <td>${prd.price}</td>
-                    <td class="text-right">
-                    <td class="text-right">
-                        <i class="far fa-edit edit-product"></i> 
+                  <tr>
+                     <td>${prd.id}</td>
+                     <td>${prd.name}</td>
+                     <td>${prd.price} $</td>
+                     <td class="text-right">                       
+                        <i class="far fa-edit edit-product"></i>                       
                     </td>
-                </tr>
-            `
+                  </tr>   
+                `;
             });
 
-
-            document.querySelector(selectors.productList).innerHTML = html
+            document.querySelector(Selectors.productList).innerHTML = html;
         },
         getSelectors: function () {
-            return selectors;
+            return Selectors;
         },
         addProduct: function (prd) {
-            document.querySelector(selectors.productCard).style.display = 'block';
-            var item = `
+
+            document.querySelector(Selectors.productCard).style.display = 'block';
+            var item = `            
                 <tr>
-                    <td>${prd.id}</td>
-                    <td>${prd.name}</td>
-                    <td>${prd.price} $</td>
-                    <td class="text-right">
-                        <i class="far fa-edit edit-product"></i> 
-                    </td>
-                </tr>
-                
+                <td>${prd.id}</td>
+                <td>${prd.name}</td>
+                <td>${prd.price} $</td>
+                <td class="text-right">
+                   <i class="far fa-edit edit-product"></i> 
+                </td>
+            </tr>              
             `;
 
-            document.querySelector(selectors.productList).innerHTML += item;
+            document.querySelector(Selectors.productList).innerHTML += item;
         },
-        updateProduct : function(prd){
-
+        updateProduct: function (prd) {
             let updatedItem = null;
-
-            let items = document.querySelectorAll(selectors.productListItems);
-            items.forEach(function(item){
-                
-                if(item.classList.contains('bg-warning')){
+            let items = document.querySelectorAll(Selectors.productListItems);
+            items.forEach(function (item) {
+                if (item.classList.contains('bg-warning')) {
                     item.children[1].textContent = prd.name;
                     item.children[2].textContent = prd.price + ' $';
-                    updatedItem = item
+                    updatedItem = item;
                 }
-
-            })
-
+            });
 
             return updatedItem;
-
         },
-
         clearInputs: function () {
-            document.querySelector(selectors.productName).value = '';
-            document.querySelector(selectors.productPrice).value = '';
+            document.querySelector(Selectors.productName).value = '';
+            document.querySelector(Selectors.productPrice).value = '';
+        },
+        clearWarnings: function () {
+            const items = document.querySelectorAll(Selectors.productListItems);
+            items.forEach(function (item) {
+                if (item.classList.contains('bg-warning')) {
+                    item.classList.remove('bg-warning');
+                }
+            });
         },
         hideCard: function () {
-            document.querySelector(selectors.productCard).style.display = 'none';
+            document.querySelector(Selectors.productCard).style.display = 'none';
         },
         showTotal: function (total) {
-            document.querySelector(selectors.totalDolar).textContent = total;
-            document.querySelector(selectors.totalTL).textContent = total * 4.5;
+            document.querySelector(Selectors.totalDolar).textContent = total;
+            document.querySelector(Selectors.totalTL).textContent = total * 4.5;
         },
         addProductToForm: function () {
             const selectedProduct = ProductController.getCurrentProduct();
-            document.querySelector(selectors.productName).value = selectedProduct.name;
-            document.querySelector(selectors.productPrice).value = selectedProduct.price;
-
+            document.querySelector(Selectors.productName).value = selectedProduct.name;
+            document.querySelector(Selectors.productPrice).value = selectedProduct.price;
+        },
+        deleteProduct: function () {
+            let items = document.querySelectorAll(Selectors.productListItems);
+            items.forEach(function (item) {
+                if (item.classList.contains('bg-warning')) {
+                    item.remove();
+                }
+            });
         },
         addingState: function (item) {
-
-            if(item){
-                item.classList.remove('bg-warning');
-            }
+            UIController.clearWarnings();
             UIController.clearInputs();
-            document.querySelector(selectors.addButton).style.display = 'inline';
-            document.querySelector(selectors.updateButton).style.display = 'none';
-            document.querySelector(selectors.deleteButton).style.display = 'none';
-            document.querySelector(selectors.cancelButton).style.display = 'none';
+            document.querySelector(Selectors.addButton).style.display = 'inline';
+            document.querySelector(Selectors.updateButton).style.display = 'none';
+            document.querySelector(Selectors.deleteButton).style.display = 'none';
+            document.querySelector(Selectors.cancelButton).style.display = 'none';
         },
         editState: function (tr) {
-
-            const parent = tr.parentNode;
-            for (let i = 0; i < parent.children.length; i++) {
-                parent.children[i].classList.remove('bg-warning');
-            }
-
             tr.classList.add('bg-warning');
-
-            document.querySelector(selectors.addButton).style.display = 'none';
-            document.querySelector(selectors.updateButton).style.display = 'inline';
-            document.querySelector(selectors.deleteButton).style.display = 'inline';
-            document.querySelector(selectors.cancelButton).style.display = 'inline';
+            document.querySelector(Selectors.addButton).style.display = 'none';
+            document.querySelector(Selectors.updateButton).style.display = 'inline';
+            document.querySelector(Selectors.deleteButton).style.display = 'inline';
+            document.querySelector(Selectors.cancelButton).style.display = 'inline';
         }
     }
-
 })();
 
 
-
-//App Controller
-const App = (function (ProductCtrl, UICtrl) {
+// App Controller
+const App = (function (ProductCtrl, UICtrl, StorageCtrl) {
 
     const UISelectors = UICtrl.getSelectors();
 
-    //Load Event Listeners
+    // Load Event Listeners
     const loadEventListeners = function () {
 
-        //Add product event
+        // add product event
         document.querySelector(UISelectors.addButton).addEventListener('click', productAddSubmit);
 
-        //Edit Product
-        document.querySelector(UISelectors.productList).addEventListener('click', productEditSubmit)
+        // edit product click
+        document.querySelector(UISelectors.productList).addEventListener('click', productEditClick);
 
-        //Edit product submit (save changes)
-        document.querySelector(UISelectors.updateButton).addEventListener('click', editProductSubmit)
+        // edit product submit
+        document.querySelector(UISelectors.updateButton).addEventListener('click', editProductSubmit);
 
-    }
+        // cancel button click
+        document.querySelector(UISelectors.cancelButton).addEventListener('click', cancelUpdate);
 
-    const editProductSubmit = function (e) {
-
-        const productName = document.querySelector(UISelectors.productName).value;
-        const productPrice = document.querySelector(UISelectors.productPrice).value;
-
-        if (productName !== '' && productPrice !== '') {
-
-            //Update product
-            const updatedProduct = ProductController.updateProduct(productName, productPrice);
-
-            //update UI
-            let item = UICtrl.updateProduct(updatedProduct);
-
-            //Get Total
-            const total = ProductCtrl.GetTotal();
-
-
-            //Show total on UI 
-            UICtrl.showTotal(total);
-
-            UICtrl.addingState(item);
-
-
-        }
-
-        e.preventDefault();
+        // delete product
+        document.querySelector(UISelectors.deleteButton).addEventListener('click', deleteProductSubmit);
 
     }
 
@@ -286,49 +287,113 @@ const App = (function (ProductCtrl, UICtrl) {
         const productPrice = document.querySelector(UISelectors.productPrice).value;
 
         if (productName !== '' && productPrice !== '') {
-            const newProduct = ProductCtrl.AddProduct(productName, productPrice);
+            // Add product
+            const newProduct = ProductCtrl.addProduct(productName, productPrice);
 
-            //add item to list
+            // add item to list
             UICtrl.addProduct(newProduct);
 
-            //Get Total
-            const total = ProductCtrl.GetTotal();
+            // add product to LS
+            StorageCtrl.storeProduct(newProduct);
 
+            // get total
+            const total = ProductCtrl.getTotal();
 
-            //Show total on UI 
+            // show total
             UICtrl.showTotal(total);
 
-            //Clear inputs
+            // clear inputs
             UICtrl.clearInputs();
+        }
+
+        console.log(productName, productPrice);
+
+        e.preventDefault();
+    }
+
+    const productEditClick = function (e) {
+
+        if (e.target.classList.contains('edit-product')) {
+
+            const id = e.target.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.textContent;
+
+            // get selected product
+            const product = ProductCtrl.getProductById(id);
+
+            // set current product
+            ProductCtrl.setCurrentProduct(product);
+
+            UICtrl.clearWarnings();
+
+            // add product to UI
+            UICtrl.addProductToForm();
+
+            UICtrl.editState(e.target.parentNode.parentNode);
+        }
+        e.preventDefault();
+    }
+
+    const editProductSubmit = function (e) {
+
+        const productName = document.querySelector(UISelectors.productName).value;
+        const productPrice = document.querySelector(UISelectors.productPrice).value;
+
+        if (productName !== '' && productPrice !== '') {
+
+            // update product
+            const updatedProduct = ProductCtrl.updateProduct(productName, productPrice);
+
+            // update ui
+            let item = UICtrl.updateProduct(updatedProduct);
+
+            // get total
+            const total = ProductCtrl.getTotal();
+
+            // show total
+            UICtrl.showTotal(total);
+
+            // update storage
+            StorageCtrl.updateProduct(updatedProduct);
+
+            UICtrl.addingState();
+
         }
 
         e.preventDefault();
     }
 
-    const productEditSubmit = function (e) {
+    const cancelUpdate = function (e) {
 
-        if (e.target.classList.contains('edit-product')) {
+        UICtrl.addingState();
+        UICtrl.clearWarnings();
 
+        e.preventDefault();
+    }
 
+    const deleteProductSubmit = function (e) {
 
-            const id = e.target.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.textContent;
+        // get selected product
+        const selectedProduct = ProductCtrl.getCurrentProduct();
 
-            //Get Selected product
+        // delete product
+        ProductCtrl.deleteProduct(selectedProduct);
 
-            const product = ProductCtrl.GetProductById(id);
+        // delete ui
+        UICtrl.deleteProduct();
 
+        // get total
+        const total = ProductCtrl.getTotal();
 
-            // set current product
+        // show total
+        UICtrl.showTotal(total);
 
-            ProductCtrl.setCurrentProduct(product);
+        // delete from storage
+        StorageCtrl.deleteProduct(selectedProduct.id);
 
+        UICtrl.addingState();
 
-            //add product to UI
-            UICtrl.addProductToForm();
-
-
-
-            UICtrl.editState(e.target.parentNode.parentNode);
+        if(total==0){
+            UICtrl.hideCard();
         }
 
         e.preventDefault();
@@ -336,28 +401,32 @@ const App = (function (ProductCtrl, UICtrl) {
 
     return {
         init: function () {
-            console.log('starting app');
+            console.log('starting app...');
 
             UICtrl.addingState();
+
             const products = ProductCtrl.getProducts();
+
             if (products.length == 0) {
                 UICtrl.hideCard();
             } else {
                 UICtrl.createProductList(products);
             }
 
+            // get total
+            const total = ProductCtrl.getTotal();
 
+            // show total
+            UICtrl.showTotal(total);
 
-            //Load Event Listener
-            loadEventListeners();
+            // load event listeners
+            loadEventListeners()
 
         }
     }
 
 
-
-})(ProductController, UIController);
+})(ProductController, UIController, StorageController);
 
 App.init();
-
 
