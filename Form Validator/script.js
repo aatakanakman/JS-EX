@@ -2,7 +2,7 @@ const form = document.getElementById('form')
 const username = document.getElementById('username')
 const email = document.getElementById('email')
 const password = document.getElementById('password')
-const repassword = document.getElementById('repassword')
+const _repassword = document.getElementById('repassword')
 const phone = document.getElementById('phone')
 
 
@@ -67,11 +67,11 @@ form.addEventListener('submit',function(e){
 
     e.preventDefault();
 
-    checkRequred([username,email,password,repassword,phone])
+    checkRequred([username,email,password,_repassword,phone])
     checkMail(email)
     checkLenght(username,7,15)
     checkLenght(password,7,12)
-    checkPasswords(password,repassword)
+    checkPasswords(password,_repassword)
     checkPhone(phone)
 
     // if(username.value === ''){
