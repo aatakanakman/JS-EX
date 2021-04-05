@@ -1,0 +1,74 @@
+body{
+    background-color: #292929;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+    justify-content: center;
+    height: 100vh; /*viewport height tamamı demek. */ 
+    margin: 0;
+    color: #fff;
+}
+
+.seat{
+    background-color: #444451;
+    height: 15px;
+    width: 15px;
+    margin: 3px;
+    border-radius: 5px;
+}
+
+.seat.selected{
+    background-color: #f6eb6f;
+}
+
+.seat.reserved{
+    background-color: #fff;
+}
+
+.seat:not(.reserved):hover{ /* üzerine geldiğinde büyümesini sağladık, not ile
+    reserved class ına sahip olanları engelledik. */
+    cursor: pointer;
+    transform: scale(1.3);
+}
+
+.seat:nth-of-type(2) { /* seat sınıfna sahip olanların, ilk iki elemanından sonrasına özellik verdik*/
+    margin-right: 20px;
+}
+
+.seat:nth-last-of-type(3){
+    margin-right: 20px;
+}
+
+.row{
+    display: flex; /* Aynı satırda kümelenmeleri için yaptık. */
+}
+
+.screen {
+    background-color: #fff;
+    height: 40px;
+    width: 100%;
+    margin: 20px 0;
+    box-shadow: 0 3px 8px rgba(255, 255, 255, 0.7);
+}
+
+.movie-list{
+    margin: 20px 0;
+}
+
+
+.info{
+    background-color: rgba(0, 0, 0,0.2);
+    padding: 5px 10px;
+    color:#777 ;
+    display: flex;
+}
+.info li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+}
+
+p.text span{
+    color: #f6eb6f;
+}

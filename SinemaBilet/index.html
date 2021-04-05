@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Sinema Bilet Uygulaması</title>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="screen"></div>
+        <div class="row">
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat reserved"></div>
+            <div class="seat reserved"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+        </div>
+        <div class="row">
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat reserved"></div>
+            <div class="seat reserved"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+        </div>
+        <div class="row">
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+        </div>
+        <div class="row">
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+        </div>
+        <div class="row">
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+        </div>
+    </div>
+
+    <div class="movie-list">
+        <select name="" id="movie">
+            <option disabled>Lütfen bir film seçiniz</option>
+            <option value="20"> Movie 1</option>
+            <option value="22"> Movie 2</option>
+            <option value="25"> Movie 3</option>
+        </select>
+    </div>
+
+    <ul class="info">
+        <li>
+            <div class="seat selected"></div>
+            <small>Seçili</small>
+        </li>
+        <li>
+            <div class="seat"></div>
+            <small>Boş</small>
+        </li>
+        <li>
+            <div class="seat reserved"></div>
+            <small>Dolu</small>
+        </li>
+    </ul>
+
+    <p class="text">
+       <span id="count">2</span>Adet Koltuk için hesaplanan  ücret <span id="amount">40</span> tl.
+    </p>
+
+    <script src="app.js"></script>
+</body>
+</html> 
