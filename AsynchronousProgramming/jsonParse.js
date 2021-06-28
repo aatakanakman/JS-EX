@@ -29,7 +29,7 @@ function loadEmployee() {
                                 <td>${employee.retired}</td>
                             </tr>`;
                 });
-
+                Threed.sleep(2000);
 
 
 
